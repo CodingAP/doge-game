@@ -33,11 +33,11 @@ class GameManager {
         this.sceneManager.player.getKeys(key, state);
         if (state) {
             if (key == ' ') {
-                this.next = true;
+                this.dialogueManager.next = true;
             }
         } else {
             if (key == ' ') {
-                this.next = false;
+                this.dialogueManager.next = false;
             }
         }
     }
@@ -45,11 +45,11 @@ class GameManager {
     getMouse(button, state) {
         if (state) {
             if (button == 0) {
-                this.chosen = true;
+                this.dialogueManager.chosen = true;
             }
         } else {
             if (button == 0) {
-                this.chosen = false;
+                this.dialogueManager.chosen = false;
             }
         }
     }
@@ -437,9 +437,9 @@ class DialogueManager {
             }
             this.line = currentLine.text;
             if (currentLine.options.reaction) {
-                gameManager.getNPC(this.currentDialogue.id).state = currentLine.options.reaction;
+                gameManager.sceneManager.getNPC(this.currentDialogue.id).state = currentLine.options.reaction;
             } else {
-                gameManager.getNPC(this.currentDialogue.id).state = 0;
+                gameManager.sceneManager.getNPC(this.currentDialogue.id).state = 0;
             }
             switch (currentLine.type) {
                 case 'text-take':
@@ -499,7 +499,7 @@ class DialogueManager {
                         } else {
                             this.currentDialogue.currentLine = 'intro';
                         }
-                        gameManager.getNPC(this.currentDialogue.id).reaction = 0;
+                        gameManager.sceneManager.getNPC(this.currentDialogue.id).reaction = 0;
                         this.currentDialogue = null;
                         break;
                 }

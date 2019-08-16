@@ -30,7 +30,7 @@ window.onload = () => {
     loader = new Loader();
     game = new GameManager();
     game.sceneManager.loadScene('demo');
-    //game.cutsceneManager.playCutscene('demo');
+    game.dialogueManager.playDialogue('lilbro');
 
     loop();
 }
