@@ -175,23 +175,23 @@ let allDialogue = {
         },
         info4: {
             type: 'text',
-            content: `Right now, we are in a cutscene, which is being made in real time.`
+            content: `DAD!`
         },
         info5: {
             type: 'text',
-            content: `I can talk while moving in all the corners!`
+            content: `DAD! I WANT TO PLAY 'DOGE IN THE FACTORY' AGAIN!`
         },
         info6: {
             type: 'text',
-            content: `Anyways, little backstory on the story in the actual game...`
+            content: `I don't care. Let me play it!`
         },
         info7: {
             type: 'text',
-            content: `This is based off of the story 'CROMCH!', which u/thebeardoger1 made!`
+            content: `But you let me play it earlier. LET ME PLAY IT NOW!`
         },
         info8: {
             type: 'text',
-            content: `You should check him out on r/dogelore, makes really good comics.`
+            content: `YAY!`
         },
     },
     demodoge: {
@@ -270,23 +270,55 @@ let allDialogue = {
         },
         welcome: {
             type: 'text',
-            content: `Welcome to the 'Doge in the Factory' demo retards...`
+            content: `Welcome to my office! I see you are looking for a job.`
         },
         info: {
             type: 'text',
-            content: `This demo is just a very small sample of some of the dialogue in the actual game.`
+            content: `No? Well, I see, how about purchasing some foot cream?`
         },
         info2: {
             type: 'text',
-            content: `Right now, u/CodingAP is currently making this a really good and fun game,`
+            content: `No to that as well? Well what do you want?`
         },
         info3: {
             type: 'text',
-            content: `so I hope you have time to stick around and see the full story.`
+            content: `Ah, the game.`
         },
         info9: {
             type: 'text',
-            content: `Ok retards, on to the demo!`
+            content: `Well, 'Doge in the Factory' is going smoothly right now...`
+        },
+        info10: {
+            type: 'text',
+            content: `The team is working on the assets to the game.`
+        },
+        info11: {
+            type: 'text',
+            content: `Sadly we don't have a demo, so I can't sho...`
+        },
+        info12: {
+            type: 'text',
+            content: `Um... son can't you see I'm busy, he he.`
+        },
+        info13: {
+            type: 'text',
+            content: `How can you play it if it doesn't exist?`
+        },
+        info14: {
+            type: 'text',
+            content: `Ok... I'll set it up for you.`
+        },
+        info15: {
+            type: 'text',
+            content: `So, the cat is out of the bag. We do have a demo, but only for certain people, but it will be released to the public later on.`
+        },
+        info16: {
+            type: 'text',
+            content: `What this version is a more optimized version of the first demo, with the office background.`
+        },
+        info17: {
+            type: 'text',
+            content: `Anyways, here it is!`
         },
     },
     reactiondoge: {
@@ -301,10 +333,9 @@ let allCutscenes = {
     demo: {
         frames: [
             {
-                duration: 2,
+                duration: 1,
                 npcs: [
-                    { npc: 'demodoge', moveTo: { x: 300, y: 300 } },
-                    { npc: 'lilbro', moveTo: { x: 500, y: 300 } }
+                    { npc: 'demodoge', moveTo: { x: 600, y: 300 } }
                 ]
             }, {
                 duration: 3,
@@ -329,37 +360,42 @@ let allCutscenes = {
             }, {
                 duration: 3,
                 npcs: [
+                    { npc: 'demodoge', dialogue: 'info9' },
+                ]
+            }, {
+                duration: 3,
+                npcs: [
+                    { npc: 'demodoge', dialogue: 'info10' },
+                ]
+            }, {
+                duration: 3,
+                npcs: [
+                    { npc: 'demodoge', dialogue: 'info11' },
+                ]
+            }, {
+                duration: 1.5,
+                npcs: [
                     { npc: 'lilbro', dialogue: 'info4' },
                 ]
             }, {
-                duration: 1,
+                duration: 2,
                 npcs: [
-                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 100, y: 200 } },
+                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 300, y: 300 } },
                 ]
             }, {
-                duration: 1,
+                duration: 3,
                 npcs: [
-                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 650, y: 200 } },
+                    { npc: 'demodoge', dialogue: 'info12' },
                 ]
             }, {
-                duration: 1,
-                npcs: [
-                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 650, y: 500 } },
-                ]
-            }, {
-                duration: 1,
-                npcs: [
-                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 100, y: 500 } },
-                ]
-            }, {
-                duration: 0.5,
-                npcs: [
-                    { npc: 'lilbro', dialogue: 'info6', moveTo: { x: 500, y: 300 } },
-                ]
-            }, {
-                duration: 2.5,
+                duration: 3,
                 npcs: [
                     { npc: 'lilbro', dialogue: 'info6' },
+                ]
+            }, {
+                duration: 3,
+                npcs: [
+                    { npc: 'demodoge', dialogue: 'info13' },
                 ]
             }, {
                 duration: 3,
@@ -369,19 +405,34 @@ let allCutscenes = {
             }, {
                 duration: 3,
                 npcs: [
-                    { npc: 'lilbro', dialogue: 'info8' },
+                    { npc: 'demodoge', dialogue: 'info14' },
+                ]
+            }, {
+                duration: 1,
+                npcs: [
+                    { npc: 'lilbro', dialogue: 'info8', moveTo: { x: -50, y: 300 } },
                 ]
             }, {
                 duration: 3,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info9' },
+                    { npc: 'demodoge', dialogue: 'info15' },
+                ]
+            }, {
+                duration: 3,
+                npcs: [
+                    { npc: 'demodoge', dialogue: 'info16' },
+                ]
+            }, {
+                duration: 3,
+                npcs: [
+                    { npc: 'demodoge', dialogue: 'info17' },
                 ]
             }
         ],
         options: {
             startingPositions: [
-                { npc: 'demodoge', position: { x: -50, y: 300 } },
-                { npc: 'lilbro', position: { x: 850, y: 300 } }
+                { npc: 'demodoge', position: { x: 850, y: 300 } },
+                { npc: 'lilbro', position: { x: -50, y: 300 } }
             ],
             cameraPosition: { x: 400, y: 300 },
             moving: true,
