@@ -68,12 +68,14 @@ let allDialogue = {
         intro: {
             type: 'text-part',
             content: `Hi, stranger! What is you name?`,
-            lead: 'intro2'
+            lead: 'intro2',
+            reaction: 1
         },
         intro2: {
             type: 'text-part',
             content: `$n? Well, hi $n! My name is Lil Bro, or at least that is what everyone calls me.`,
-            lead: 'intro3'
+            lead: 'intro3',
+            reaction: 1
         },
         intro3: {
             type: 'choice',
@@ -81,7 +83,8 @@ let allDialogue = {
             options: [
                 { content: 'Sure!', response: 'yescringeformers' },
                 { content: 'No...', response: 'nocringeformers' }
-            ]
+            ],
+            reaction: 1
         },
         newintro: {
             type: 'choice',
@@ -89,7 +92,8 @@ let allDialogue = {
             options: [
                 { content: 'Sure!', response: 'yescringeformers' },
                 { content: 'No...', response: 'nocringeformers' }
-            ]
+            ],
+            reaction: 1
         },
         yescringeformers: {
             type: 'text-give',
@@ -98,43 +102,51 @@ let allDialogue = {
                 success: `loafatronitem`,
                 failure: `fullpockets`,
                 already: 'itemrepeat'
-            }
+            },
+            reaction: 1
         },
         nocringeformers: {
             type: 'text-end',
             content: 'Well, ok, maybe later then...',
             back: 'newintro',
+            reaction: 1
         },
         loafatronitem: {
             type: 'text-part',
             content: `I don't have much, but the Loaf-a-Tron is the coolest one!`,
             lead: 'loafatrontrigger',
+            reaction: 1
         },
         loafatrontrigger: {
             type: 'text-trigger',
             triggeredNPC: 'demodoge',
             triggeredLine: 'newintro',
             lead: 'loafatronitem2',
+            reaction: 1
         },
         loafatronitem2: {
             type: 'text-end',
             content: `I got it for Christmas from my Big Bro!`,
             back: 'havefun',
+            reaction: 1
         },
         fullpockets: {
             type: 'text-end',
             content: `I would give you one, but you looks like you have too much stuff, so I'll just wait...`,
             back: 'newintro',
+            reaction: 1
         },
         itemrepeat: {
             type: 'text-end',
             content: `Ok, pull out your Loaf-a-Tron and play!`,
             back: 'newintro',
+            reaction: 1
         },
         havefun: {
             type: 'text-end',
             content: `Oh boy! I finally have someone to play Cringeformers with!`,
             back: 'havefun',
+            reaction: 1
         },
         sadbro: {
             type: 'choice',
@@ -142,7 +154,8 @@ let allDialogue = {
             options: [
                 { content: 'Sure!', response: 'yestake' },
                 { content: 'Um...', response: 'notake' }
-            ]
+            ],
+            reaction: 1
         },
         yestake: {
             type: 'text-take',
@@ -151,68 +164,82 @@ let allDialogue = {
                 success: 'yay',
                 failure: 'sad',
                 already: 'itemrepeat'
-            }
+            },
+            reaction: 1
         },
         yay: {
             type: 'text-end',
             content: `Yay! I knew I could trust you...`,
             back: 'yay',
+            reaction: 1
         },
         sad: {
             type: 'text-part',
             content: `You don't have it? HOW COULD YOU LOSE IT!?!?`,
             lead: 'hate',
+            reaction: 1
         },
         notake: {
             type: 'text-part',
             content: `What? But I want my Loaf-a-Tron back!`,
             lead: 'hate',
+            reaction: 1
         },
         hate: {
             type: 'text-end',
             content: `I hate you...`,
             back: 'hate',
+            reaction: 1
         },
         info4: {
             type: 'text',
-            content: `DAD!`
+            content: `DAD!`,
+            reaction: 1
         },
         info5: {
             type: 'text',
-            content: `DAD! I WANT TO PLAY 'DOGE IN THE FACTORY' AGAIN!`
+            content: `DAD! I WANT TO PLAY 'DOGE IN THE FACTORY' AGAIN!`,
+            reaction: 1
         },
         info6: {
             type: 'text',
-            content: `I don't care. Let me play it!`
+            content: `I don't care. Let me play it!`,
+            reaction: 1
         },
         info7: {
             type: 'text',
-            content: `But you let me play it earlier. LET ME PLAY IT NOW!`
+            content: `But you let me play it earlier. LET ME PLAY IT NOW!`,
+            reaction: 1
         },
         info8: {
             type: 'text',
-            content: `YAY!`
+            content: `YAY!`,
+            reaction: 1
         },
     },
     demodoge: {
         intro: {
             type: 'text-end',
-            content: `Eh, go away loser...`
+            content: `Eh, go away loser...`,
+            reaction: 1
         },
         newintro: {
             type: 'text-part',
             content: `Hey. $n's the name right?`,
-            lead: 'talking1'
+            lead: 'talking1',
+            reaction: 1
         },
         talking1: {
             type: 'text-part',
             content: `Overheard you talking to that kid over there. I see you got a Loaf-a-Tron.`,
-            lead: 'talking2'
+            lead: 'talking2',
+            reaction: 1
         },
         talking2: {
             type: 'text-part',
             content: `Don't know if you know this, but that is some ultra-rare stuff right there.`,
-            lead: 'talking3'
+            lead: 'talking3',
+            reaction: 1
         },
         talking3: {
             type: 'choice',
@@ -220,13 +247,15 @@ let allDialogue = {
             options: [
                 { content: 'Ez Money...', response: 'thankstrigger' },
                 { content: `It's not mine...`, response: 'reallytrigger' }
-            ]
+            ],
+            reaction: 1
         },
         thankstrigger: {
             type: 'text-trigger',
             triggeredNPC: 'lilbro',
             triggeredLine: 'sadbro',
             lead: 'thankstake',
+            reaction: 1
         },
         thankstake: {
             type: 'text-take',
@@ -235,96 +264,117 @@ let allDialogue = {
                 success: 'thanks',
                 failure: 'donthave',
                 already: 'thanks'
-            }
+            },
+            reaction: 1
         },
         thanks: {
             type: 'text-end',
             content: `Thanks bro, you're not going to regret it.`,
-            back: 'final'
+            back: 'final',
+            reaction: 1
         },
         donthave: {
             type: 'text-end',
             content: `You don't even have it anymore. What is wrong with you?`,
-            back: 'donthave'
+            back: 'donthave',
+            reaction: 1
         },
         reallytrigger: {
             type: 'text-trigger',
             triggeredNPC: 'lilbro',
             triggeredLine: 'sadbro',
             lead: 'really',
+            reaction: 1
         },
         really: {
             type: 'text-end',
             content: `Really. Your going to do this. Bro, that's cringe.`,
-            back: 'really'
+            back: 'really',
+            reaction: 1
         },
         final: {
             type: 'text-part',
             content: `Don't worry, I'll pay you in a few days...`,
-            lead: 'final2'
+            lead: 'final2',
+            reaction: 1
         },
         final2: {
             type: 'text-end',
             content: `...in your dreams.`,
-            back: 'final'
+            back: 'final',
+            reaction: 1
         },
         welcome: {
             type: 'text',
-            content: `Welcome to my office! I see you are looking for a job.`
+            content: `Welcome to my office! I see you are looking for a job.`,
+            reaction: 1
         },
         info: {
             type: 'text',
-            content: `No? Well, I see, how about purchasing some foot cream?`
+            content: `No? Well, I see, how about purchasing some foot cream?`,
+            reaction: 1
         },
         info2: {
             type: 'text',
-            content: `No to that as well? Well what do you want?`
+            content: `No to that as well? Well what do you want?`,
+            reaction: 1
         },
         info3: {
             type: 'text',
-            content: `Ah, the game.`
+            content: `Ah, the game.`,
+            reaction: 1
         },
         info9: {
             type: 'text',
-            content: `Well, 'Doge in the Factory' is going smoothly right now...`
+            content: `Well, 'Doge in the Factory' is going smoothly right now...`,
+            reaction: 1
         },
         info10: {
             type: 'text',
-            content: `The team is working on the assets to the game.`
+            content: `The team is working on the assets to the game.`,
+            reaction: 1
         },
         info11: {
             type: 'text',
-            content: `Sadly we don't have a demo, so I can't sho...`
+            content: `Sadly we don't have a demo, so I can't sho...`,
+            reaction: 1
         },
         info12: {
             type: 'text',
-            content: `Um... son can't you see I'm busy, he he.`
+            content: `Um... son can't you see I'm busy, he he.`,
+            reaction: 1
         },
         info13: {
             type: 'text',
-            content: `How can you play it if it doesn't exist?`
+            content: `How can you play it if it doesn't exist?`,
+            reaction: 1
         },
         info14: {
             type: 'text',
-            content: `Ok... I'll set it up for you.`
+            content: `Ok... I'll set it up for you.`,
+            reaction: 1
         },
         info15: {
             type: 'text',
-            content: `So, the cat is out of the bag. We do have a demo, but only for certain people, but it will be released to the public later on.`
+            content: `So, the cat is out of the bag. We do have a demo, but only for certain people, but it will be released to the public later on.`,
+            reaction: 1
         },
         info16: {
             type: 'text',
-            content: `What this version is a more optimized version of the first demo, with the office background.`
+            content: `What this version is a more optimized version of the first demo, with the office background.`,
+            reaction: 1
         },
         info17: {
             type: 'text',
-            content: `Anyways, here it is!`
+            content: `Anyways, here it is!`,
+            reaction: 1
         },
     },
     reactiondoge: {
         intro: {
             type: 'text-end',
-            content: 'Hope you enjoy the demo! This was made by CodingAP, zinnyboy, and BamBamBamoozel.'
+            content: 'Hope you enjoy the demo! This was made by CodingAP, zinnyboy, and BamBamBamoozel.',
+            reaction: 1
         }
     }
 }

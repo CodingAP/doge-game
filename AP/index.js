@@ -2,10 +2,18 @@ let canvas = document.getElementById('canvas');
 let context = canvas.getContext('2d');
 let mouseX, mouseY;
 
-let game, loader;
+let game, loader, userInput, playerName = 'noname', menu = 0;
 
 document.addEventListener('keydown', event => {
-    game.getKeys(event.key, true);
+    if (menu == 0) {
+        userInput.takeInput(event.key);
+        if (event.key == 'Enter') {
+            menu = 1;
+            playerName = userInput.giveInput();
+        }
+    } else if (menu == 1) {
+        game.getKeys(event.key, true);
+    }
 }, false);
 
 document.addEventListener('keyup', event => {
@@ -29,6 +37,7 @@ document.addEventListener('mousemove', event => {
 window.onload = () => {
     loader = new Loader();
     game = new GameManager();
+    userInput = new UserInput();
     game.sceneManager.loadScene('demo');
     game.cutsceneManager.playCutscene('demo');
 
@@ -40,7 +49,15 @@ let loop = () => {
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     if (loader.loaded) {
-        game.loop();
+        if (menu == 0) {
+            context.fillStyle = '#fff';
+            context.font = '50px Arial';
+            context.textAlign = 'center';
+            context.fillText('Type your name and press enter...', canvas.width / 2, 200);
+            userInput.loop();
+        } else if (menu == 1) {
+            game.loop();
+        }
     } else {
         context.fillStyle = '#fff';
         context.font = '50px Arial';

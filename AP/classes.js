@@ -267,44 +267,30 @@ class Scene {
         this.inCutscene = false;
         this.cutscenePositions = [];
         this.chat = loader.loaded.chat;
-        this.selectNPC = false;
         this.cutsceneNPC = null;
     }
 
     loop(gameManager) {
         loader.loaded[this.background].animate(this.bounds.x, this.bounds.y);
-        let NPCSelected = false;
 
         for (let i = 0; i < this.npcs.length; i++) {
             let npc = gameManager.sceneManager.getNPC(this.npcs[i].npc);
             let animation = npc.npcAnimations[npc.state];
             if (this.inCutscene) {
                 for (let j = 0; j < gameManager.cutsceneManager.loaded.length; j++) {
-                    if (this.cutsceneNPC == this.npcs[i].npc) {
-                        npc.npcAnimations[1].animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
-                    } else if (gameManager.cutsceneManager.loaded[j] == this.npcs[i].npc) {
+                    if (gameManager.cutsceneManager.loaded[j] == this.npcs[i].npc) {
                         animation.animate(this.cutscenePositions[i].position.x - animation.spriteW / 2, this.cutscenePositions[i].position.y - animation.spriteH / 2);
                     }
                 }
             } else {
-                if (this.selectedNPC && this.selectedNPC.id == this.npcs[i].npc) {
-                    if (this.selectedNPC.npcAnimations[1]) {
-                        this.selectedNPC.npcAnimations[1].animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
-                    } else {
-                        animation.animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
-                    }
-                } else {
-                    animation.animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
-                }
+                animation.animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
                 let d = Math.sqrt(Math.pow(gameManager.sceneManager.player.position.x - this.npcs[i].position.x, 2) + Math.pow(gameManager.sceneManager.player.position.y - this.npcs[i].position.y, 2));
                 if (d < 125) {
                     if (!gameManager.dialogueManager.currentDialogue) {
                         this.chat.animate(this.npcs[i].position.x - 75, this.npcs[i].position.y - 200);
                         if (this.selectNPC) {
                             gameManager.dialogueManager.playDialogue(this.npcs[i].npc);
-                            this.selectedNPC = npc;
                         } else {
-                            this.selectedNPC = null;
                         }
                     }
                 }
@@ -473,7 +459,7 @@ class DialogueManager {
                     for (let i = 0; i < words.length; i++) {
                         if (words[i].charAt(0) == '$') {
                             let newWord = words[i].slice(2);
-                            words[i] = 'AP' + newWord;
+                            words[i] = playerName + newWord;
                         }
                     }
                     let name = gameManager.sceneManager.getNPC(this.currentDialogue.id).name;
@@ -547,7 +533,7 @@ class DialogueManager {
                         } else {
                             this.currentDialogue.currentLine = 'intro';
                         }
-                        gameManager.sceneManager.getNPC(this.currentDialogue.id).reaction = 0;
+                        gameManager.sceneManager.getNPC(this.currentDialogue.id).state = 0;
                         this.currentDialogue = null;
                         break;
                 }
@@ -603,13 +589,14 @@ class DialogueManager {
         }
     }
 
-    playLine(id, line) {
-        if (this.currentDialogue) this.stop();
+    playLine(id, line, gameManager) {
+        if (this.currentDialogue) this.stop(gameManager);
         this.playDialogue(id);
         this.currentDialogue.currentLine = line;
     }
 
-    stop() {
+    stop(gameManager) {
+        gameManager.sceneManager.getNPC(this.currentDialogue.id).state = 0;
         this.currentDialogue.currentLine = 'intro';
         this.cutscene = false;
         this.currentDialogue = null;
@@ -721,7 +708,7 @@ class CutsceneManager {
                     positions.push(null);
                 }
                 if (allCutscenes[id].frames[i].npcs[j].dialogue) {
-                    dialogue.push(allCutscenes[id].frames[i].npcs[j].dialogue);
+                    dialogue.push({ dialogueLine: allCutscenes[id].frames[i].npcs[j].dialogue, npc: allCutscenes[id].frames[i].npcs[j].npc });
                 } else {
                     dialogue.push(null);
                 }
@@ -770,11 +757,10 @@ class CutsceneManager {
                             this.angles.push(0);
                         }
                         if (frame.dialogue[i]) {
-                            gameManager.dialogueManager.playLine(current.npc, frame.dialogue[i]);
+                            gameManager.dialogueManager.playLine(current.npc, frame.dialogue[i], gameManager);
                             gameManager.dialogueManager.cutscene = true;
-                            gameManager.sceneManager.cutsceneNPC = frame.npcs[i];
                         } else {
-                            gameManager.sceneManager.cutsceneNPC = null;
+                            gameManager.sceneManager.getNPC(current.npc).state = 0;
                             gameManager.dialogueManager.cutscene = false;
                         }
                     }
@@ -787,7 +773,7 @@ class CutsceneManager {
                     this.playingCutscene.currentFrame++;
                     if (this.playingCutscene.currentFrame >= this.playingCutscene.frames.length) {
                         gameManager.sceneManager.currentScene.inCutscene = false;
-                        gameManager.dialogueManager.stop();
+                        gameManager.dialogueManager.stop(gameManager);
                         this.playingCutscene = null;
                         gameManager.sceneManager.cutsceneNPC = null;
                     } else {
@@ -813,13 +799,11 @@ class CutsceneManager {
                                     this.moveSpeeds.push(0);
                                     this.angles.push(0);
                                 }
-                                if (frame.dialogue[i]) {
-                                    gameManager.dialogueManager.playLine(frame.npcs[i], frame.dialogue[i]);
+                                if (frame.dialogue[i] && frame.dialogue[i].npc == frame.npcs[i]) {
+                                    gameManager.dialogueManager.playLine(frame.npcs[i], frame.dialogue[i].dialogueLine, gameManager);
                                     gameManager.dialogueManager.cutscene = true;
-                                    gameManager.sceneManager.cutsceneNPC = frame.npcs[i];
                                 } else {
-                                    gameManager.sceneManager.cutsceneNPC = null;
-                                    gameManager.dialogueManager.stop();
+                                    gameManager.dialogueManager.stop(gameManager);
                                 }
                             }
                         }
@@ -841,11 +825,7 @@ class CutsceneManager {
                                 }
                             }
 
-                            //console.log(previousPosition.position)
-
                             let newPosition = { x: previousPosition.position.x + (Math.cos(this.angles[i]) * this.moveSpeeds[i]), y: previousPosition.position.y + (Math.sin(this.angles[i]) * this.moveSpeeds[i]) }
-
-                            //console.log(newPosition)
 
                             gameManager.sceneManager.currentScene.cutscenePositions[index] = { npc: frame.npcs[i], position: newPosition };
                         }
@@ -887,7 +867,7 @@ class UserInput {
         this.characterLimit = 13;
     }
 
-    show(context) {
+    loop() {
         context.fillStyle = '#fff';
         context.font = this.fontSize + 'px Arial';
         context.textAlign = 'left';
@@ -901,9 +881,7 @@ class UserInput {
         if (this.currentPosition == this.input.length) {
             context.fillText(pointer, x, this.position.y);
         }
-    }
 
-    update() {
         this.currentFrame++;
         if (this.currentFrame >= this.pointerSpeed) {
             this.pointer = !this.pointer;
