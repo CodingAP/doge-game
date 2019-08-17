@@ -168,7 +168,27 @@ let allDialogue = {
             type: 'text-end',
             content: `I hate you...`,
             back: 'hate',
-        }
+        },
+        info4: {
+            type: 'text',
+            content: `Right now, we are in a cutscene, which is being made in real time.`
+        },
+        info5: {
+            type: 'text',
+            content: `I can talk while moving in all the corners!`
+        },
+        info6: {
+            type: 'text',
+            content: `Anyways, little backstory on the story in the actual game...`
+        },
+        info7: {
+            type: 'text',
+            content: `This is based off of the story 'CROMCH!', which u/thebeardoger1 made!`
+        },
+        info8: {
+            type: 'text',
+            content: `You should check him out on r/dogelore, makes really good comics.`
+        },
     },
     demodoge: {
         intro: {
@@ -260,26 +280,6 @@ let allDialogue = {
             type: 'text',
             content: `so I hope you have time to stick around and see the full story.`
         },
-        info4: {
-            type: 'text',
-            content: `Right now, we are in a cutscene, which is being made in real time.`
-        },
-        info5: {
-            type: 'text',
-            content: `I can talk while moving in all the corners!`
-        },
-        info6: {
-            type: 'text',
-            content: `Anyways, little backstory on the story in the actual game...`
-        },
-        info7: {
-            type: 'text',
-            content: `This is based off of the story 'CROMCH!', which u/thebeardoger1 made!`
-        },
-        info8: {
-            type: 'text',
-            content: `You should check him out on r/dogelore, makes really good comics.`
-        },
         info9: {
             type: 'text',
             content: `Ok retards, on to the demo!`
@@ -293,7 +293,8 @@ let allCutscenes = {
             {
                 duration: 2,
                 npcs: [
-                    { npc: 'demodoge', moveTo: { x: 400, y: 300 } },
+                    { npc: 'demodoge', moveTo: { x: 300, y: 300 } },
+                    { npc: 'lilbro', moveTo: { x: 500, y: 300 } }
                 ]
             }, {
                 duration: 3,
@@ -318,47 +319,47 @@ let allCutscenes = {
             }, {
                 duration: 3,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info4' },
+                    { npc: 'lilbro', dialogue: 'info4' },
                 ]
             }, {
                 duration: 1,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info5', moveTo: { x: 100, y: 200 } },
+                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 100, y: 200 } },
                 ]
             }, {
                 duration: 1,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info5', moveTo: { x: 650, y: 200 } },
+                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 650, y: 200 } },
                 ]
             }, {
                 duration: 1,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info5', moveTo: { x: 650, y: 500 } },
+                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 650, y: 500 } },
                 ]
             }, {
                 duration: 1,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info5', moveTo: { x: 100, y: 500 } },
+                    { npc: 'lilbro', dialogue: 'info5', moveTo: { x: 100, y: 500 } },
                 ]
             }, {
                 duration: 0.5,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info6', moveTo: { x: 400, y: 300 } },
+                    { npc: 'lilbro', dialogue: 'info6', moveTo: { x: 500, y: 300 } },
                 ]
             }, {
                 duration: 2.5,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info6' },
+                    { npc: 'lilbro', dialogue: 'info6' },
                 ]
             }, {
                 duration: 3,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info7' },
+                    { npc: 'lilbro', dialogue: 'info7' },
                 ]
             }, {
                 duration: 3,
                 npcs: [
-                    { npc: 'demodoge', dialogue: 'info8' },
+                    { npc: 'lilbro', dialogue: 'info8' },
                 ]
             }, {
                 duration: 3,
@@ -370,7 +371,9 @@ let allCutscenes = {
         options: {
             startingPositions: [
                 { npc: 'demodoge', position: { x: -50, y: 300 } },
+                { npc: 'lilbro', position: { x: 850, y: 300 } }
             ],
+            cameraPosition: { x: 400, y: 300 },
             moving: true,
             dialogue: true
         }
