@@ -2,20 +2,26 @@ let allNPCS = {
     demodoge: {
         collision: { x: -75, y: 0, width: 150, height: 75 },
         animations: [
-            'npc_demodoge'
-        ]
+            'npc_demodoge',
+            'npc_demodoge_talk'
+        ],
+        name: 'Doge'
     },
     lilbro: {
         collision: { x: -75, y: 0, width: 150, height: 75 },
         animations: [
-            'npc_lilbro'
-        ]
+            'npc_lilbro',
+            'npc_lilbro_talk'
+        ],
+        name: 'Lil Bro'
     },
     reactiondoge: {
         collision: { x: -75, y: 0, width: 150, height: 75 },
         animations: [
-            'npc_demodoge'
-        ]
+            'npc_demodoge',
+            'npc_demodoge_talk'
+        ],
+        name: 'Interesting Doge'
     }
 }
 
@@ -48,8 +54,6 @@ let allScenes = {
             { npc: 'reactiondoge', position: { x: 500, y: 300 } }
         ],
         objects: [
-            { object: 'cromchbar', position: { x: 200, y: 500 } },
-            { object: 'loafatron', position: { x: 400, y: 500 } }
         ],
         background: 'background',
         bounds: { x: -100, y: -100, width: 1000, height: 800 }
@@ -214,7 +218,7 @@ let allDialogue = {
             type: 'choice',
             content: `If you would give that to me, I would pay you lots of dogecoins for it.`,
             options: [
-                { content: 'Ez Money...', response: 'thankstake' },
+                { content: 'Ez Money...', response: 'thankstrigger' },
                 { content: `It's not mine...`, response: 'reallytrigger' }
             ]
         },
@@ -284,6 +288,12 @@ let allDialogue = {
             type: 'text',
             content: `Ok retards, on to the demo!`
         },
+    },
+    reactiondoge: {
+        intro: {
+            type: 'text-end',
+            content: 'Hope you enjoy the demo! This was made by CodingAP, zinnyboy, and BamBamBamoozel.'
+        }
     }
 }
 

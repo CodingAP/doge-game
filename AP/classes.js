@@ -40,10 +40,14 @@ class GameManager {
         if (state) {
             if (key == ' ') {
                 this.dialogueManager.next = true;
+            } else if (key == 'Enter') {
+                this.sceneManager.currentScene.selectNPC = true;
             }
         } else {
             if (key == ' ') {
                 this.dialogueManager.next = false;
+            } else if (key == 'Enter') {
+                this.sceneManager.currentScene.selectNPC = false;
             }
         }
     }
@@ -81,7 +85,7 @@ class Player {
 
     show() {
         let currentAnimation = this.playerAnimations[this.state];
-        currentAnimation.animate(this.position.x - currentAnimation.spriteW / 2, this.position.y - currentAnimation.spriteH / 2);
+        currentAnimation.animate(this.position.x - 75, this.position.y - 75);
     }
 
     getKeys(key, state) {
@@ -132,7 +136,9 @@ class Loader {
         this.loadAnimation('player_idle', 'img/doge_body.png', { width: 150, height: 150 });
 
         this.loadAnimation('npc_demodoge', 'img/doge_body.png', { width: 150, height: 150 });
-        this.loadAnimation('npc_lilbro', 'img/doge_lilbro.png', { width: 150, height: 250 });
+        this.loadAnimation('npc_lilbro', 'img/doge_lilbro.png', { width: 80, height: 133 });
+        this.loadAnimation('npc_demodoge_talk', 'img/doge_talk.png', { width: 160, height: 160, count: 2, timePerFrame: 0.2 })
+        this.loadAnimation('npc_lilbro_talk', 'img/lilbro_talk.png', { width: 80, height: 133, count: 2, timePerFrame: 0.2 })
 
         this.loadAnimation('item_cromchbar', 'img/cromchbar.png', { width: 100, height: 100 });
         this.loadAnimation('item_loafatron', 'img/doge_bread.png', { width: 100, height: 100 });
@@ -140,7 +146,9 @@ class Loader {
         this.loadAnimation('object_cromchbar', 'img/cromchbar.png', { width: 100, height: 100 });
         this.loadAnimation('object_loafatron', 'img/doge_bread.png', { width: 100, height: 100 });
 
-        this.loadAnimation('background', 'img/office.jpg', { width: 1000, height: 800 })
+        this.loadAnimation('background', 'img/office.jpg', { width: 1000, height: 800 });
+
+        this.loadAnimation('chat', 'img/chat.png', { width: 150, height: 150 });
     }
 
     checkLoad() {
@@ -183,6 +191,7 @@ class SceneManager {
                 npc.npcAnimations.push(loader.loaded[allNPCS[key].animations[i]]);
             }
             npc.collision = allNPCS[key].collision;
+            npc.name = allNPCS[key].name;
             this.allNPCS.push(npc);
         });
 
@@ -257,10 +266,13 @@ class Scene {
         this.bounds = { x: 0, y: 0, width: 800, height: 600 };
         this.inCutscene = false;
         this.cutscenePositions = [];
+        this.chat = loader.loaded.chat;
+        this.selectNPC = false;
     }
 
     loop(gameManager) {
         loader.loaded[this.background].animate(this.bounds.x, this.bounds.y);
+        let NPCSelected = false;
 
         for (let i = 0; i < this.npcs.length; i++) {
             let npc = gameManager.sceneManager.getNPC(this.npcs[i].npc);
@@ -272,13 +284,33 @@ class Scene {
                     }
                 }
             } else {
-                animation.animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
+                if (this.selectedNPC && this.selectedNPC.id == this.npcs[i].npc) {
+                    if (this.selectedNPC.npcAnimations[1]) {
+                        this.selectedNPC.npcAnimations[1].animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
+                    } else {
+                        animation.animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
+                    }
+                } else {
+                    animation.animate(this.npcs[i].position.x - animation.spriteW / 2, this.npcs[i].position.y - animation.spriteH / 2);
+                }
+                let d = Math.sqrt(Math.pow(gameManager.sceneManager.player.position.x - this.npcs[i].position.x, 2) + Math.pow(gameManager.sceneManager.player.position.y - this.npcs[i].position.y, 2));
+                if (d < 125) {
+                    if (!gameManager.dialogueManager.currentDialogue) {
+                        this.chat.animate(this.npcs[i].position.x - 75, this.npcs[i].position.y - 200);
+                        if (this.selectNPC) {
+                            gameManager.dialogueManager.playDialogue(this.npcs[i].npc);
+                            this.selectedNPC = npc;
+                        } else {
+                            this.selectedNPC = null;
+                        }
+                    }
+                }
             }
-        }
 
-        for (let i = 0; i < this.objects.length; i++) {
-            let object = gameManager.sceneManager.getObject(this.objects[i].object);
-            object.animation.animate(this.objects[i].position.x - object.animation.spriteW / 2, this.objects[i].position.y - object.animation.spriteH / 2);
+            for (let i = 0; i < this.objects.length; i++) {
+                let object = gameManager.sceneManager.getObject(this.objects[i].object);
+                object.animation.animate(this.objects[i].position.x - object.animation.spriteW / 2, this.objects[i].position.y - object.animation.spriteH / 2);
+            }
         }
     }
 }
@@ -289,6 +321,7 @@ class NPC {
         this.state = 0;
         this.id = id;
         this.collision = null;
+        this.name = '';
     }
 }
 
@@ -432,7 +465,6 @@ class DialogueManager {
             this.dialogueActive = true;
             let currentLine = this.currentDialogue.findDialogue(this.currentDialogue.currentLine);
             if (!currentLine.text) {
-                console.log(currentLine);
                 if (currentLine.options.content) {
                     let words = currentLine.options.content.split(' ');
                     for (let i = 0; i < words.length; i++) {
@@ -441,7 +473,8 @@ class DialogueManager {
                             words[i] = 'AP' + newWord;
                         }
                     }
-                    words.unshift(this.currentDialogue.id + ':');
+                    let name = gameManager.sceneManager.getNPC(this.currentDialogue.id).name;
+                    words.unshift(name + ':');
                     currentLine.text = words.join(' ');
                 } else {
                     currentLine.text = '';
