@@ -125,7 +125,7 @@ class Sprite {
 class Loader {
     constructor() {
         this.loaded = {};
-        this.total = 8;
+        this.total = 11;
         this.loadAmount = 0;
         this.loadedAll = false;
 
