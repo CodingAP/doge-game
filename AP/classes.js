@@ -40,13 +40,13 @@ class GameManager {
         if (state) {
             if (key == ' ') {
                 this.dialogueManager.next = true;
-            } else if (key == 'Enter') {
+            } else if (key == 'f') {
                 this.sceneManager.currentScene.selectNPC = true;
             }
         } else {
             if (key == ' ') {
                 this.dialogueManager.next = false;
-            } else if (key == 'Enter') {
+            } else if (key == 'f') {
                 this.sceneManager.currentScene.selectNPC = false;
             }
         }
