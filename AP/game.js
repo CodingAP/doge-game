@@ -54,6 +54,7 @@ let allScenes = {
             { npc: 'reactiondoge', position: { x: 500, y: 300 } }
         ],
         objects: [
+            { object: 'cromchbar', position: { x: 200, y: 100 } }
         ],
         background: 'background',
         bounds: { x: -100, y: -100, width: 1000, height: 800 }
@@ -63,6 +64,44 @@ let allScenes = {
 let allDialogue = {
     none: {
         intro: { type: 'text', content: `Can't find the text file you are looking for! Or the developer is stupid and hasn't added it. Either way he is stupid...` }
+    },
+    player: {
+        cromchbar: {
+            type: 'text-part',
+            content: 'This is a cromchbar.',
+            lead: 'cromchbar2',
+            reaction: 1
+        },
+        cromchbar2: {
+            type: 'text-end',
+            content: 'It looks good, but it\'s actual crap.',
+            reaction: 1
+        },
+        yescringeformersres: {
+            type: 'text-end',
+            content: 'Sure! What Cringeformers do you have?',
+            reaction: 1
+        },
+        nocringeformersres: {
+            type: 'text-end',
+            content: 'No, I\'m kinda busy...',
+            reaction: 1
+        },
+        yayres: {
+            type: 'text-end',
+            content: 'Sure! Here you go...',
+            reaction: 1
+        },
+        sadres: {
+            type: 'text-end',
+            content: 'I would, but I don\'t have it anymore...',
+            reaction: 1
+        },
+        notakeres: {
+            type: 'text-end',
+            content: 'No, you can\'t!',
+            reaction: 1
+        },
     },
     lilbro: {
         intro: {
@@ -81,8 +120,8 @@ let allDialogue = {
             type: 'choice',
             content: `I have an idea! Want to play Cringeformers?`,
             options: [
-                { content: 'Sure!', response: 'yescringeformers' },
-                { content: 'No...', response: 'nocringeformers' }
+                { content: 'Sure!', response: 'yescringeformersplayer' },
+                { content: 'No...', response: 'nocringeformersplayer' }
             ],
             reaction: 1
         },
@@ -90,10 +129,15 @@ let allDialogue = {
             type: 'choice',
             content: `Hi $n! Want to play Cringeformers now?`,
             options: [
-                { content: 'Sure!', response: 'yescringeformers' },
-                { content: 'No...', response: 'nocringeformers' }
+                { content: 'Sure!', response: 'yescringeformersplayer' },
+                { content: 'No...', response: 'nocringeformersplayer' }
             ],
             reaction: 1
+        },
+        yescringeformersplayer: {
+            type: 'text-player',
+            playerLine: 'yescringeformersres',
+            lead: 'yescringeformers'
         },
         yescringeformers: {
             type: 'text-give',
@@ -104,6 +148,11 @@ let allDialogue = {
                 already: 'itemrepeat'
             },
             reaction: 1
+        },
+        nocringeformersplayer: {
+            type: 'text-player',
+            playerLine: 'nocringeformersres',
+            lead: 'nocringeformers'
         },
         nocringeformers: {
             type: 'text-end',
@@ -153,7 +202,7 @@ let allDialogue = {
             content: `Hi $n! Can I have my Loaf-a-Tron back?`,
             options: [
                 { content: 'Sure!', response: 'yestake' },
-                { content: 'Um...', response: 'notake' }
+                { content: 'Um...', response: 'notakeplayer' }
             ],
             reaction: 1
         },
@@ -161,11 +210,16 @@ let allDialogue = {
             type: 'text-take',
             takes: {
                 item: 'loafatron',
-                success: 'yay',
-                failure: 'sad',
+                success: 'yayplayer',
+                failure: 'sadplayer',
                 already: 'itemrepeat'
             },
             reaction: 1
+        },
+        yayplayer: {
+            type: 'text-player',
+            playerLine: 'yayres',
+            lead: 'yay'
         },
         yay: {
             type: 'text-end',
@@ -173,11 +227,21 @@ let allDialogue = {
             back: 'yay',
             reaction: 1
         },
+        sadplayer: {
+            type: 'text-player',
+            playerLine: 'sadres',
+            lead: 'sad'
+        },
         sad: {
             type: 'text-part',
             content: `You don't have it? HOW COULD YOU LOSE IT!?!?`,
             lead: 'hate',
             reaction: 1
+        },
+        notakeplayer: {
+            type: 'text-player',
+            playerLine: 'notakeres',
+            lead: 'notake'
         },
         notake: {
             type: 'text-part',

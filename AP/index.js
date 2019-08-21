@@ -39,7 +39,7 @@ window.onload = () => {
     game = new GameManager();
     userInput = new UserInput();
     game.sceneManager.loadScene('demo');
-    game.cutsceneManager.playCutscene('demo');
+    //game.cutsceneManager.playCutscene('demo');
 
     loop();
 }

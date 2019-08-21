@@ -68,7 +68,7 @@ class GameManager {
 class Player {
     constructor() {
         this.position = new Vector2D();
-        this.playerAnimations = [loader.loaded.player_idle];
+        this.playerAnimations = [loader.loaded.player_idle, loader.loaded.npc_demodoge_talk];
         this.state = 0;
         this.moveSpeed = 5;
         this.keys = { a: 0, d: 0, w: 0, s: 0 };
@@ -290,7 +290,6 @@ class Scene {
                         this.chat.animate(this.npcs[i].position.x - 75, this.npcs[i].position.y - 200);
                         if (this.selectNPC) {
                             gameManager.dialogueManager.playDialogue(this.npcs[i].npc);
-                        } else {
                         }
                     }
                 }
@@ -299,6 +298,16 @@ class Scene {
             for (let i = 0; i < this.objects.length; i++) {
                 let object = gameManager.sceneManager.getObject(this.objects[i].object);
                 object.animation.animate(this.objects[i].position.x - object.animation.spriteW / 2, this.objects[i].position.y - object.animation.spriteH / 2);
+
+                let d = Math.sqrt(Math.pow(gameManager.sceneManager.player.position.x - this.objects[i].position.x, 2) + Math.pow(gameManager.sceneManager.player.position.y - this.objects[i].position.y, 2));
+                if (d < 100) {
+                    if (!gameManager.dialogueManager.currentDialogue) {
+                        this.chat.animate(this.objects[i].position.x - 75, this.objects[i].position.y - 200);
+                        if (this.selectNPC) {
+                            gameManager.dialogueManager.playPlayerDialogue(this.objects[i].object);
+                        }
+                    }
+                }
             }
         }
     }
@@ -411,6 +420,11 @@ class DialogueManager {
         this.options = null;
         this.cutscene = false;
         this.chosen = false;
+        this.previous = null;
+
+        Object.keys(allDialogue).forEach(key => {
+            this.createDialogue(key);
+        })
     }
 
     playDialogue(id) {
@@ -440,7 +454,8 @@ class DialogueManager {
                 gives: line.gives,
                 choices: line.options,
                 triggeredNPC: line.triggeredNPC,
-                triggeredLine: line.triggeredLine
+                triggeredLine: line.triggeredLine,
+                playerLine: line.playerLine
             };
             npcDialogue.push(new DialogueText(key, line.type, options))
         });
@@ -451,6 +466,12 @@ class DialogueManager {
 
     loop(gameManager) {
         if (this.currentDialogue) {
+            let currentNPC = null;
+            if (this.currentDialogue.id != 'player') {
+                currentNPC = gameManager.sceneManager.getNPC(this.currentDialogue.id);
+            } else {
+                currentNPC = gameManager.sceneManager.player;
+            }
             this.dialogueActive = true;
             let currentLine = this.currentDialogue.findDialogue(this.currentDialogue.currentLine);
             if (!currentLine.text) {
@@ -462,7 +483,10 @@ class DialogueManager {
                             words[i] = playerName + newWord;
                         }
                     }
-                    let name = gameManager.sceneManager.getNPC(this.currentDialogue.id).name;
+                    let name = playerName;
+                    if (this.currentDialogue.id != 'player') {
+                        name = currentNPC.name;
+                    }
                     words.unshift(name + ':');
                     currentLine.text = words.join(' ');
                 } else {
@@ -471,11 +495,15 @@ class DialogueManager {
             }
             this.line = currentLine.text;
             if (currentLine.options.reaction) {
-                gameManager.sceneManager.getNPC(this.currentDialogue.id).state = currentLine.options.reaction;
+                currentNPC.state = currentLine.options.reaction;
             } else {
-                gameManager.sceneManager.getNPC(this.currentDialogue.id).state = 0;
+                currentNPC.state = 0;
             }
             switch (currentLine.type) {
+                case 'text-player':
+                    this.currentDialogue.currentLine = currentLine.options.lead;
+                    this.playPlayerDialogue(currentLine.options.playerLine, true);
+                    break;
                 case 'text-take':
                     let takesObject = currentLine.options.takes;
                     if (currentLine.done) {
@@ -533,8 +561,10 @@ class DialogueManager {
                         } else {
                             this.currentDialogue.currentLine = 'intro';
                         }
-                        gameManager.sceneManager.getNPC(this.currentDialogue.id).state = 0;
+                        currentNPC.state = 0;
+                        let currentID = this.currentDialogue.id;
                         this.currentDialogue = null;
+                        if (currentID == 'player' && this.previous) this.playDialogue(this.previous);
                         break;
                 }
                 if (this.currentDialogue) {
@@ -589,14 +619,24 @@ class DialogueManager {
         }
     }
 
-    playLine(id, line, gameManager) {
-        if (this.currentDialogue) this.stop(gameManager);
+    playLine(id, line) {
+        if (this.currentDialogue) this.stop();
         this.playDialogue(id);
         this.currentDialogue.currentLine = line;
     }
 
-    stop(gameManager) {
-        gameManager.sceneManager.getNPC(this.currentDialogue.id).state = 0;
+    playPlayerDialogue(object, previous) {
+        if (previous) {
+            this.previous = this.currentDialogue.id;
+        } else {
+            this.previous = null;
+        }
+        if (this.currentDialogue && !previous) this.stop();
+        this.playDialogue('player');
+        this.currentDialogue.currentLine = object;
+    }
+
+    stop() {
         this.currentDialogue.currentLine = 'intro';
         this.cutscene = false;
         this.currentDialogue = null;
@@ -757,7 +797,7 @@ class CutsceneManager {
                             this.angles.push(0);
                         }
                         if (frame.dialogue[i]) {
-                            gameManager.dialogueManager.playLine(current.npc, frame.dialogue[i], gameManager);
+                            gameManager.dialogueManager.playLine(current.npc, frame.dialogue[i]);
                             gameManager.dialogueManager.cutscene = true;
                         } else {
                             gameManager.sceneManager.getNPC(current.npc).state = 0;
@@ -773,7 +813,7 @@ class CutsceneManager {
                     this.playingCutscene.currentFrame++;
                     if (this.playingCutscene.currentFrame >= this.playingCutscene.frames.length) {
                         gameManager.sceneManager.currentScene.inCutscene = false;
-                        gameManager.dialogueManager.stop(gameManager);
+                        gameManager.dialogueManager.stop();
                         this.playingCutscene = null;
                         gameManager.sceneManager.cutsceneNPC = null;
                     } else {
@@ -800,10 +840,10 @@ class CutsceneManager {
                                     this.angles.push(0);
                                 }
                                 if (frame.dialogue[i] && frame.dialogue[i].npc == frame.npcs[i]) {
-                                    gameManager.dialogueManager.playLine(frame.npcs[i], frame.dialogue[i].dialogueLine, gameManager);
+                                    gameManager.dialogueManager.playLine(frame.npcs[i], frame.dialogue[i].dialogueLine);
                                     gameManager.dialogueManager.cutscene = true;
                                 } else {
-                                    gameManager.dialogueManager.stop(gameManager);
+                                    gameManager.dialogueManager.stop();
                                 }
                             }
                         }
