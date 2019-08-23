@@ -54,7 +54,8 @@ let allScenes = {
             { npc: 'reactiondoge', position: { x: 500, y: 300 } }
         ],
         objects: [
-            { object: 'cromchbar', position: { x: 200, y: 100 } }
+            { object: 'cromchbar', position: { x: 200, y: 100 } },
+            { object: 'loafatron', position: { x: 400, y: 100 } }
         ],
         background: 'background',
         bounds: { x: -100, y: -100, width: 1000, height: 800 }
@@ -75,6 +76,30 @@ let allDialogue = {
         cromchbar2: {
             type: 'text-end',
             content: 'It looks good, but it\'s actual crap.',
+            reaction: 1
+        },
+        loafatron: {
+            type: 'text-part',
+            content: 'This is a Loaf-a-tron!',
+            lead: 'loafatrontake',
+            reaction: 1
+        },
+        loafatrontake: {
+            type: 'text-player-take',
+            gives: {
+                item: 'loafatron',
+                success: 'loafatron2',
+                failure: 'loafatronfail'
+            }
+        },
+        loafatronfail: {
+            type: 'text-end',
+            content: 'I would take it, but I don\'t have enough space...',
+            reaction: 1
+        },
+        loafatron2: {
+            type: 'text-end',
+            content: 'I better take it because it is super rare...',
             reaction: 1
         },
         yescringeformersres: {

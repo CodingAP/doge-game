@@ -72,6 +72,7 @@ class Player {
         this.state = 0;
         this.moveSpeed = 5;
         this.keys = { a: 0, d: 0, w: 0, s: 0 };
+        this.npcs = [];
     }
 
     move() {
@@ -311,6 +312,12 @@ class Scene {
             }
         }
     }
+
+    removeObject(id) {
+        for (let i = 0; i < this.objects.length; i++) {
+            if (this.objects[i].object == id) this.objects.splice(i, 1);
+        }
+    }
 }
 
 class NPC {
@@ -503,6 +510,16 @@ class DialogueManager {
                 case 'text-player':
                     this.currentDialogue.currentLine = currentLine.options.lead;
                     this.playPlayerDialogue(currentLine.options.playerLine, true);
+                    break;
+                case 'text-player-take':
+                    let playerGives = currentLine.options.gives;
+                    if (gameManager.inventoryManager.give(playerGives.item)) {
+                        this.currentDialogue.currentLine = playerGives.success;
+                        gameManager.sceneManager.currentScene.removeObject(playerGives.item);
+                        currentLine.done = true;
+                    } else {
+                        this.currentDialogue.currentLine = playerGives.failure;
+                    }
                     break;
                 case 'text-take':
                     let takesObject = currentLine.options.takes;
